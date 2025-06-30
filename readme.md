@@ -1,199 +1,132 @@
+<h1 align="center">AI Creative Partner 🚀</h1>
 
-# 🚀 The AI Developer Challenge
+![app/assets/ai_workflow.png](app/assets/ai_workflow.png)
 
-### Make Something Insanely Great
-Welcome. This isn’t just a coding task. This is a mission. A calling for the bold and curious—those who dare to think
-differently. If you're ready to build something magical, something powerful, something *insanely great*—read on.
+[Video Explaination of the project]("have_to_give_link")
 
----
+The **AI Creative Partner** is an advanced application built on the Openfabric platform that transforms simple user prompts into complex, multi-modal creations. It leverages a sophisticated pipeline of AI services to generate not just an image, but a full 3D model, all while maintaining context and learning from past interactions.
 
-## 🌟 The Vision
+## 🛠️ Tech Stack
 
-Imagine this:  
-A user types a simple idea —
-> “Make me a glowing dragon standing on a cliff at sunset.”
+| **Category** | **Technology** | **Purpose** |
+| :--- | :--- | :--- |
+| **Platform** | Openfabric SDK | Provides the core framework for creating and connecting decentralized AI services. |
+| **Orchestration** | Python | The primary language used for the backend logic and workflow orchestration. |
+| **LLM Integration**| Ollama (`deepseek-r1:14b`) | Runs the local Large Language Models for prompt enhancement and intent analysis. |
+| **Vector Database** | ChromaDB | Stores text embeddings for fast, semantic similarity search to find past creations. |
+| **Relational Database**| SQLite | Stores the metadata associated with each creation, such as prompts and timestamps. |
+| **Embeddings** | Sentence-Transformers | Generates the vector embeddings from text prompts for storage in ChromaDB. |
+| **Dependencies** | Poetry | Manages Python package dependencies and virtual environments. |
+| **Containerization**| Docker | Used to containerize the application for consistent deployment and execution. |
 
-And your app...
+## Pipeline 🔄
 
-- Understands the request using a local LLM.
-- Generates stunning visuals from text.
-- Transforms that image into an interactive 3D model.
-- Remembers it. Forever.
+### Step 1: Intent Analysis and Memory Access Decision
 
-You're not building an app. You're building **a creative partner**.
+- When the user provides their prompt, we find the intent using **Deepseek r1:14b** model. Here we pass the current session history as context along with the current user prompt as input to the LLM, which determines whether to access long-term memory or not by returning **True** or **False**. 
 
----
+- For example, when it returns **False** - given the current user prompt as input and the current session history as context, the LLM checks whether the user is referring to past interactions. If 'yes', it verifies if these interactions exist in the current session history. If 'yes', then we don't require long-term memory, so it returns **False**.
 
-## 🎯 The Mission
+- When the First LLM Layer returns **False**, we skip retrieving data from long-term memory and proceed to the Second LLM Layer.
 
-Create an intelligent, end-to-end pipeline powered by Openfabric and a locally hosted LLM:
+- The Second LLM Layer (**Deepseek r1:14b**) receives three parameters: current user prompt, current session history, and past context. In this case, we don't pass past context because we're not retrieving any past session conversations since the First LLM Layer returned **False**.
 
-### Step 1: Understand the User
+- In this scenario, the Second LLM Layer, having the current user prompt as input and current session history as context, first checks whether the user prompt refers to previous enhanced prompts within the current session history. If 'yes', it uses that enhanced prompt and modifies it according to the current user prompt requirements. If 'no', it enhances the user prompt from scratch.
 
-Use a local LLM like **DeepSeek** or **Llama** to:
 
-- Interpret prompts
-- Expand them creatively
-- Drive meaningful, artistic input into the generation process
+**Why this step is Important:**
 
-### Step 2: Bring Ideas to Life
+→ Given the user prompt just because user is referring to the past interactions we are not querying over database everytime, so we are saving resources, **Time** and improving **Latency**
 
-Chain two Openfabric apps together:
+![app/assets/llm_layer_1.png](app/assets/llm_layer_1.png)
 
-- **Text to Image**  
-  App ID: `f0997a01-d6d3-a5fe-53d8-561300318557`  
-  [View on Openfabric](https://openfabric.network/app/view/f0997a01-d6d3-a5fe-53d8-561300318557)
+### Step 2: Long‑Term Memory Retrieval
 
-- **Image to 3D**  
-  App ID: `69543f29-4d41-4afc-7f29-3d51591f11eb`  
-  [View on Openfabric](https://openfabric.network/app/view/69543f29-4d41-4afc-7f29-3d51591f11eb)
+- If the user prompt refers to past session conversations given the current session history as context, the First LLM Layer returns **True**, which means we need to retrieve from long-term memory.
 
-Use their **manifest** and **schema** dynamically to structure requests.
+- For long term meomry we are using **ChromaDb + SQLite** (Let's understand what we are store)
 
-### Step 3: Remember Everything
+    - **ChromaDB**: Since we need to re-create previous images that were generated using enhanced prompts, we store the enhanced prompts as embeddings with session IDs in metadata.
 
-Build memory like it matters.
+    - **SQLite**: Here we are storing session id, user prompt, enhanced prompt, timestamp in the database. 
 
-- 🧠 **Short-Term**: Session context during a single interaction
-- 💾 **Long-Term**: Persistence across sessions using SQLite, Redis, or flat files  
-  Let the AI recall things like:
+- Since the First LLM Layer returned **True**, we convert the user query into embeddings and perform semantic search using cosine similarity to get relevant chunks with IDs. Using these IDs, we fetch data from the SQLite database (user prompt, enhanced prompt, and timestamp) and pass this as past context to the Second LLM Layer.
 
-> “Generate a new robot like the one I created last Thursday — but this time, with wings.”
+- The Second LLM Layer now has the current user prompt as input with past context as context. It first examines the past enhanced prompt and modifies it according to the current user requirements, returning a new enhanced prompt.
 
----
+![app/assets/llm_layer_2.png](app/assets/llm_layer_2.png)
 
-## 🛠 The Pipeline
+### Step 3: Prompt Enhancement
 
-User Prompt
-↓
-Local LLM (DeepSeek or LLaMA)
-↓
-Text-to-Image App (Openfabric)
-↓
-Image Output
-↓
-Image-to-3D App (Openfabric)
-↓
-3D Model Output
+- When neither **current session history** nor **past context** is given, meaning the user prompt is brand new, the Second LLM Layer first identifies the subject of the user prompt and understands the objects mentioned. It tries to fit those objects naturally according to the description and additionally adds lighting and other visual effects that are relevant to the scene.
 
-Simple. Elegant. Powerful.
+- When **current session history** is given, meaning the user is referring to the current session's enhanced prompt (Note: here we don't pass past context as it refers to the current session only), the Second LLM Layer considers this enhanced prompt and tries to modify it according to the current user requirements while improving it by adding visual effects to the scene.
 
----
+- When **past context** is given, meaning the user is referring to a past session's enhanced prompt (Note: here we don't pass current session history as it refers to past context), the past context contains the previous user prompt, enhanced prompt, and timestamp. The Second LLM Layer gives preference to the enhanced prompt while also understanding the previous user prompt and timestamp as context, then modifies or adds to the current user prompt according to the user requirements.
 
-## 📦 Deliverables
+### Step 4: Multi-Modal Generation
 
-What we expect:
+- The final enhanced prompt is first fed into the Text‑to‑Image app to generate a high quality image, then passed into the Image‑to‑3D app to produce a fully textured 3D model.
 
-- ✅ Fully working Python project
-- ✅ `README.md` with clear instructions
-- ✅ Prompt → Image → 3D working example
-- ✅ Logs or screenshots
-- ✅ Memory functionality (clearly explained)
+## ⚙️ Getting Started
 
----
+Follow these instructions to get the application up and running locally.
 
-## 🧠 What We’re Really Testing
+### 1. Prerequisites
 
-- Your grasp of the **Openfabric SDK** (`Stub`, `Remote`, `schema`, `manifest`)
-- Your **creativity** in prompt-to-image generation
-- Your **engineering intuition** with LLMs
-- Your ability to manage **context and memory**
-- Your **attention to quality** — code, comments, and clarity
+Make sure you have the following installed on your system:
 
----
+* [Python 3.11+](https://www.python.org/downloads/)
+* [Poetry](https://python-poetry.org/docs/#installation) (for Python dependency management)
 
-## 🚀 Bonus Points
+### 2. Clone the Repository
 
-- 🎨 Visual GUI with Streamlit or Gradio
-- 🔍 FAISS/ChromaDB for memory similarity
-- 🗂 Local browser to explore generated 3D assets
-- 🎤 Voice-to-text interaction
-
----
-
-## ✨ Example Experience
-
-Prompt:
-> “Design a cyberpunk city skyline at night.”
-
-→ LLM expands into vivid, textured visual descriptions  
-→ Text-to-Image App renders a cityscape  
-→ Image-to-3D app converts it into depth-aware 3D  
-→ The system remembers the request for remixing later
-
-That’s not automation. That’s imagination at scale.
-
----
-
-## 💡 Where to start
-You’ll find the project structure set, the entrypoint is in `main.py` file.
-```python
-############################################################
-# Execution callback function
-############################################################
-def execute(model: AppModel) -> None:
-    """
-    Main execution entry point for handling a model pass.
-
-    Args:
-        model (AppModel): The model object containing request and response structures.
-    """
-
-    # Retrieve input
-    request: InputClass = model.request
-
-    # Retrieve user config
-    user_config: ConfigClass = configurations.get('super-user', None)
-    logging.info(f"{configurations}")
-
-    # Initialize the Stub with app IDs
-    app_ids = user_config.app_ids if user_config else []
-    stub = Stub(app_ids)
-
-    # ------------------------------
-    # TODO : add your magic here
-    # ------------------------------
-                                
-                                
-                                
-    # Prepare response
-    response: OutputClass = model.response
-    response.message = f"Echo: {request.prompt}"
+```bash
+git clone [https://github.com/karthikponna/openfabric_ai_test.git](https://github.com/karthikponna/openfabric_ai_test.git)
+cd openfabric_ai_test
 ```
 
-Given schema, stub implementation and all the details you should be able to figure out how eventing works but as an
-extra hint (if needed) here is an example of calling and app get the value and save it as an image:
-```python
-    # Call the Text to Image app
-    object = stub.call('c25dcd829d134ea98f5ae4dd311d13bc.node3.openfabric.network', {'prompt': 'Hello World!'}, 'super-user')
-    image = object.get('result')
-    # save to file
-    with open('output.png', 'wb') as f:
-        f.write(image)
+### 3. Install Dependencies
+
+The project uses Poetry to manage dependencies. Navigate to the `app` directory and run the following command to install the required Python packages.
+
+```bash
+cd app
+poetry install
 ```
 
-## How to start
-The application can be executed in two different ways:
-* locally by running the `start.sh` 
-* on in a docker container using `Dockerfile`
+### 4. Download Deepseek r1:14b model
 
-If all is fine you should be able to access the application on `http://localhost:8888/swagger-ui/#/App/post_execution` and see the following screen:
+The project uses Deepseek r1:14b model from ollama. Run below command to download it.
 
-![Swagger UI](./swagger-ui.png)
+```bash
+ollama pull deepseek-r1:14b
+```
 
-## Ground Rules
-Step up with any arsenal (read: libraries or packages) you believe in, but remember:
-* 👎 External services like chatGPT are off-limits. Stand on your own.
-* 👎 Plagiarism is for the weak. Forge your own path.
-* 👎 A broken app equals failure. Non-negotiable.
+### 5. Check `8888` and `8501` are free:
 
-## This Is It
-We're not just evaluating a project; we're judging your potential to revolutionize our 
-landscape. A half-baked app won’t cut it.
+Run below commands to see if local serves are free if not then kill the servers to restart.
 
-We're zeroing in on:
-* 👍 Exceptional documentation.
-* 👍 Code that speaks volumes.
-* 👍 Inventiveness that dazzles.
-* 👍 A problem-solving beast.
-* 👍 Unwavering adherence to the brief
+```bash
+lsof -i :8888
+kill -9 <PID>
+
+lsof -i :8501
+kill -9 <PID>
+```
+
+### 6. Start ollama server 
+
+Run below command to start the Ollama server in your first terminal.
+
+```bash
+ollama serve
+```
+
+## 7. Run your Streamlit app 🏃‍➡️
+
+Make sure you have run the below command in the second terminal.
+
+```bash
+poetry run bash start.sh
+```
