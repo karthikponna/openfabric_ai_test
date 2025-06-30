@@ -2,7 +2,7 @@
 
 ![app/assets/ai_workflow.png](app/assets/ai_workflow.png)
 
-[Video Explaination of the project]("have_to_give_link")
+[Video Explaination of the project](https://youtu.be/06LYU2HAlHE?si=RidqmyPbGywmUn5W)
 
 The **AI Creative Partner** is an advanced application built on the Openfabric platform that transforms simple user prompts into complex, multi-modal creations. It leverages a sophisticated pipeline of AI services to generate not just an image, but a full 3D model, all while maintaining context and learning from past interactions.
 
@@ -19,9 +19,9 @@ The **AI Creative Partner** is an advanced application built on the Openfabric p
 | **Dependencies** | Poetry | Manages Python package dependencies and virtual environments. |
 | **Containerization**| Docker | Used to containerize the application for consistent deployment and execution. |
 
-## Pipeline 🔄
+## 🔗 Pipeline 
 
-### Step 1: Intent Analysis and Memory Access Decision
+### Step 1: Intent Analysis and Memory Access Decision 🎯
 
 - When the user provides their prompt, we find the intent using **Deepseek r1:14b** model. Here we pass the current session history as context along with the current user prompt as input to the LLM, which determines whether to access long-term memory or not by returning **True** or **False**. 
 
@@ -40,11 +40,11 @@ The **AI Creative Partner** is an advanced application built on the Openfabric p
 
 ![app/assets/llm_layer_1.png](app/assets/llm_layer_1.png)
 
-### Step 2: Long‑Term Memory Retrieval
+### Step 2: Long‑Term Memory Retrieval 🧠
 
 - If the user prompt refers to past session conversations given the current session history as context, the First LLM Layer returns **True**, which means we need to retrieve from long-term memory.
 
-- For long term meomry we are using **ChromaDb + SQLite** (Let's understand what we are store)
+- For long term meomry we are using **ChromaDb + SQLite** (Let's understand what we are storing)
 
     - **ChromaDB**: Since we need to re-create previous images that were generated using enhanced prompts, we store the enhanced prompts as embeddings with session IDs in metadata.
 
@@ -56,7 +56,7 @@ The **AI Creative Partner** is an advanced application built on the Openfabric p
 
 ![app/assets/llm_layer_2.png](app/assets/llm_layer_2.png)
 
-### Step 3: Prompt Enhancement
+### Step 3: Prompt Enhancement ✍🏼
 
 - When neither **current session history** nor **past context** is given, meaning the user prompt is brand new, the Second LLM Layer first identifies the subject of the user prompt and understands the objects mentioned. It tries to fit those objects naturally according to the description and additionally adds lighting and other visual effects that are relevant to the scene.
 
@@ -64,7 +64,7 @@ The **AI Creative Partner** is an advanced application built on the Openfabric p
 
 - When **past context** is given, meaning the user is referring to a past session's enhanced prompt (Note: here we don't pass current session history as it refers to past context), the past context contains the previous user prompt, enhanced prompt, and timestamp. The Second LLM Layer gives preference to the enhanced prompt while also understanding the previous user prompt and timestamp as context, then modifies or adds to the current user prompt according to the user requirements.
 
-### Step 4: Multi-Modal Generation
+### Step 4: Multi-Modal Generation 🤖
 
 - The final enhanced prompt is first fed into the Text‑to‑Image app to generate a high quality image, then passed into the Image‑to‑3D app to produce a fully textured 3D model.
 
