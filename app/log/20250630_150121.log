@@ -1,0 +1,119 @@
+2025-06-30 15:01:21,827 - app_logger - INFO - SQLite database initialized successfully.
+2025-06-30 15:01:21,827 - app_logger - INFO - New session started: e2988fc0-ee10-4b55-97fe-ba90dd61df26
+2025-06-30 15:01:29,055 - app_logger - INFO - [Intent Analyzer] Current session context: user: generate a aggressive dragon
+2025-06-30 15:01:58,967 - app_logger - INFO - [Intent Analyzer] Raw response: '<think>
+Okay, so I need to figure out whether the user's current request refers to something from their previous conversation before this session or not. The task is to determine if I should look into old memories (previous sessions) or just focus on the current context.
+
+The user's message is "generate an aggressive dragon." Looking at the current session context, the only thing mentioned so far is that they asked for a generate an aggressive dragon in this same session. So, there's no indication that this request refers to anything from before this chat started.
+
+In the examples provided, if the user mentions something like "remake the dragon from yesterday," then it would require checking old memories because it refers to a previous session. But here, the user is simply asking for an aggressive dragon without any reference to time or past interactions within this session.
+
+Therefore, since there's no mention of a prior interaction in this current session related to dragons or anything else, I don't need to look into old memories. The request is new and part of the ongoing conversation.
+</think>
+
+{"requiresMemory": false}'
+2025-06-30 15:01:58,967 - app_logger - INFO - [Intent Analyzer] Parsed JSON response: False
+2025-06-30 15:01:58,967 - app_logger - INFO - Intent Analyzer for prompt 'generate a aggressive dragon': requires_memory=False
+2025-06-30 15:01:58,970 - app_logger - INFO - [LLM] Using current session history: 1 messages
+2025-06-30 15:03:05,692 - app_logger - INFO - [LLM] Raw response: '<think>
+Okay, I need to create an enhanced prompt for a "generate a aggressive dragon" request. Since there’s no pastContext or currentSessionHistory provided, I have to start from scratch.
+
+First, analyze the user's request: they want an aggressive dragon. So, I should think about what makes a dragon look aggressive. Maybe it's the pose—like flying with wings spread, mouth open showing teeth and flames. The environment should be dark and stormy to match the mood. Maybe include elements like fire, smoke, or lightning.
+
+Lighting: Probably dramatic, maybe during a sunset with deep colors to add intensity.
+
+Composition: The dragon could be in the foreground, with mountains or ruins behind it to create depth. A low angle might make it look more menacing.
+
+Details: Claws, scales that look sharp and jagged, fire coming out of its mouth, maybe some smoke or lightning for effect. The wings should look strong and powerful.
+
+Mood: Intense and scary, so the colors should be vivid with dark shadows.
+
+Putting it all together, I need a detailed prompt that includes all these elements to make the image as vivid as possible.
+</think>
+
+{"newEnhancedPrompt": "A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with flames shooting from its mouth, hovering over a dark, stormy landscape with lightning illuminating the sky, dramatic sunset colors of deep reds and oranges, intense shadows and lighting, cinematic composition, detailed textures on scales and wings, powerful and menacing presence, high contrast for dramatic effect"}'
+2025-06-30 15:03:05,693 - app_logger - INFO - [LLM] Cleaned response: '{"newEnhancedPrompt": "A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with flames shooting from its mouth, hovering over a dark, stormy landscape with lightning illuminating the sky, dramatic sunset colors of deep reds and oranges, intense shadows and lighting, cinematic composition, detailed textures on scales and wings, powerful and menacing presence, high contrast for dramatic effect"}'
+2025-06-30 15:03:05,694 - app_logger - INFO - [LLM] Generated Enhanced Prompt: A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with flames shooting from its mouth, hovering over a dark, stormy landscape with lightning illuminating the sky, dramatic sunset colors of deep reds and oranges, intense shadows and lighting, cinematic composition, detailed textures on scales and wings, powerful and menacing presence, high contrast for dramatic effect
+2025-06-30 15:03:50,384 - app_logger - INFO - Saved prompt ID 1 to SQLite.
+2025-06-30 15:03:58,944 - app_logger - INFO - ChromaDB client initialized. Collection 'creations' is ready.
+2025-06-30 15:03:59,847 - app_logger - INFO - Saved prompt ID 1 embedding to ChromaDB.
+2025-06-30 15:16:46,247 - app_logger - INFO - [Intent Analyzer] Current session context: user: generate a aggressive dragon
+assistant: **Enhanced Prompt:** A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with flames shooting from its mouth, hovering over a dark, stormy landscape with lightning illuminating the sky, dramatic sunset colors of deep reds and oranges, intense shadows and lighting, cinematic composition, detailed textures on scales and wings, powerful and menacing presence, high contrast for dramatic effect
+user: generate a bmw super car
+2025-06-30 15:17:26,478 - app_logger - INFO - [Intent Analyzer] Raw response: '<think>
+Okay, so I need to figure out whether the user's current request refers to something from their previous conversation before this session or not. The task is to determine if I should search old memories (return true) or not (return false). 
+
+Looking at the current session context provided, the user first asked to generate an aggressive dragon. The assistant responded with a detailed prompt for that dragon. Then, in the next message, the user switched gears and asked to generate a BMW super car. 
+
+Now, I need to analyze if "generate a bmw super car" refers to anything from before this current session or just within the current one. Since the BMW request is the second item in the current session's history, it doesn't refer to any previous conversation outside of this session. The user hasn't mentioned anything about past interactions or prior generations beyond what's shown here.
+
+The examples given for returning true involve references like "from last week" or "from yesterday," which indicate a previous session. In contrast, the BMW request is standalone and doesn't mention any prior context. Therefore, it's a new request within the current session, so I don't need to look into old memories.
+</think>
+
+{"requiresMemory": false}'
+2025-06-30 15:17:26,479 - app_logger - INFO - [Intent Analyzer] Parsed JSON response: False
+2025-06-30 15:17:26,479 - app_logger - INFO - Intent Analyzer for prompt 'generate a bmw super car': requires_memory=False
+2025-06-30 15:17:26,482 - app_logger - INFO - [LLM] Using current session history: 3 messages
+2025-06-30 15:18:39,009 - app_logger - INFO - [LLM] Raw response: '<think>
+Okay, so I need to generate a detailed enhanced prompt for "a bmw super car." Let me start by understanding what elements are important in creating an impressive image of this. 
+
+First, BMW is known for its sleek, modern design. So, I should think about making the car look futuristic and aerodynamic. Maybe it's a concept car or something from their high-end lineup. The color could be something bold to make it stand out—maybe metallic blue with some carbon fiber accents.
+
+Next, where would this supercar be? A sleek cityscape sounds good. It could be driving on a highway at night, with neon lights reflecting off its body. That adds a lot of visual interest and makes the scene dynamic.
+
+Lighting is important too. Neon reflections can give it a futuristic feel, and maybe some glowing accents on the car itself to highlight its features. I should mention detailed textures like the metallic paint and carbon fiber parts to make it look high-tech.
+
+The composition could have the car in motion, maybe with a slight angle to show speed. Including elements like the city skyline in the background would add depth. Also, thinking about camera angles, a low-angle shot could emphasize the car's size and presence.
+
+I want to make sure all these details come together cohesively: sleek design, vibrant color, neon-lit environment, detailed textures, and dynamic lighting.
+</think>
+
+{"newEnhancedPrompt": "A sleek, futuristic BMW supercar with sharp lines and aerodynamic design, gleaming metallic blue paint with carbon fiber accents, driving on a sleek cityscape highway at night, neon lights reflecting off its surface, glowing accents on the car, detailed textures of metallic paint and carbon fiber, dramatic lighting, cinematic composition, low-angle shot to emphasize speed and power, vibrant colors, futuristic atmosphere"}'
+2025-06-30 15:18:39,012 - app_logger - INFO - [LLM] Cleaned response: '{"newEnhancedPrompt": "A sleek, futuristic BMW supercar with sharp lines and aerodynamic design, gleaming metallic blue paint with carbon fiber accents, driving on a sleek cityscape highway at night, neon lights reflecting off its surface, glowing accents on the car, detailed textures of metallic paint and carbon fiber, dramatic lighting, cinematic composition, low-angle shot to emphasize speed and power, vibrant colors, futuristic atmosphere"}'
+2025-06-30 15:18:39,012 - app_logger - INFO - [LLM] Generated Enhanced Prompt: A sleek, futuristic BMW supercar with sharp lines and aerodynamic design, gleaming metallic blue paint with carbon fiber accents, driving on a sleek cityscape highway at night, neon lights reflecting off its surface, glowing accents on the car, detailed textures of metallic paint and carbon fiber, dramatic lighting, cinematic composition, low-angle shot to emphasize speed and power, vibrant colors, futuristic atmosphere
+2025-06-30 15:19:19,794 - app_logger - INFO - Saved prompt ID 2 to SQLite.
+2025-06-30 15:19:19,822 - app_logger - INFO - ChromaDB client initialized. Collection 'creations' is ready.
+2025-06-30 15:19:20,723 - app_logger - INFO - Saved prompt ID 2 embedding to ChromaDB.
+2025-06-30 15:22:07,933 - app_logger - INFO - [Intent Analyzer] Current session context: user: generate a aggressive dragon
+assistant: **Enhanced Prompt:** A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with flames shooting from its mouth, hovering over a dark, stormy landscape with lightning illuminating the sky, dramatic sunset colors of deep reds and oranges, intense shadows and lighting, cinematic composition, detailed textures on scales and wings, powerful and menacing presence, high contrast for dramatic effect
+user: generate a bmw super car
+assistant: **Enhanced Prompt:** A sleek, futuristic BMW supercar with sharp lines and aerodynamic design, gleaming metallic blue paint with carbon fiber accents, driving on a sleek cityscape highway at night, neon lights reflecting off its surface, glowing accents on the car, detailed textures of metallic paint and carbon fiber, dramatic lighting, cinematic composition, low-angle shot to emphasize speed and power, vibrant colors, futuristic atmosphere
+user: generate a new dragon same like last time but now in blue
+2025-06-30 15:22:38,642 - app_logger - INFO - [Intent Analyzer] Raw response: '<think>
+Okay, so I need to figure out whether the user is referring to something from their previous conversation or not. Let me look at the current session context they provided.
+
+In this case, the user has had three interactions:
+
+1. The user asked to generate an aggressive dragon.
+2. Then, they asked for a BMW supercar.
+3. Now, they're asking to generate a new dragon similar to the last one but in blue.
+
+Looking at the third request, "generate a new dragon same like last time but now in blue," it's clear that they are referring back to their previous dragon image from step 1 of this current session. They want a similar dragon but with a color change. Since this is within the same session and not from before, I don't need to look into any old memories beyond what's already here.
+
+So, since the reference is within the current context, it doesn't require searching previous sessions. Therefore, the answer should be false.
+</think>
+
+{"requiresMemory": false}'
+2025-06-30 15:22:38,642 - app_logger - INFO - [Intent Analyzer] Parsed JSON response: False
+2025-06-30 15:22:38,642 - app_logger - INFO - Intent Analyzer for prompt 'generate a new dragon same like last time but now in blue': requires_memory=False
+2025-06-30 15:22:38,644 - app_logger - INFO - [LLM] Using current session history: 5 messages
+2025-06-30 15:24:28,295 - app_logger - INFO - [LLM] Raw response: '<think>
+Alright, let me figure out how to approach this user's request. The user wants to generate a new dragon similar to the last one but in blue. Looking back at the session history, the previous dragon was described as fierce with sharp claws, jagged scales, wings spread wide, roaring aggressively with flames, set against a dark stormy landscape under dramatic sunset colors.
+
+So, the key elements to retain are the fierceness, sharp features, flame breath, and the dramatic setting. The main change is the color from whatever it was before (probably red or orange given the sunset) to blue. I need to ensure that the dragon's scales are a deep, rich blue with some metallic sheen to keep the majestic look.
+
+I should also think about how the color affects the environment. Blue might go well with a twilight or nighttime setting, so adjusting the lighting accordingly would make sense. The wings should maintain their jagged edges but now in blue, and the flames could perhaps have a blue tint or some contrasting color to stand out.
+
+Lighting is crucial here. Instead of deep reds and oranges, I can use cooler tones with maybe some purple and teal accents to complement the blue scales. The stormy landscape remains, but under blue hues, it might look more mystical and serene yet still menacing.
+
+I also need to keep the cinematic composition, ensuring details like scale textures, wing feathers, and the overall powerful presence are maintained. Maybe add a bit more depth with shadows and reflections to enhance the visual appeal.
+
+Putting it all together, I want the new prompt to capture that same intensity but in blue, making sure the environment and lighting support the color shift while retaining all the other impactful elements from before.
+</think>
+
+{"newEnhancedPrompt": "A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with blue flames shooting from its mouth, hovering over a dark, stormy landscape under twilight sky with purple and teal hues, intense shadows and lighting, cinematic composition, detailed textures on metallic-blue scales and wings, powerful and menacing presence, high contrast for dramatic effect"}'
+2025-06-30 15:24:28,296 - app_logger - INFO - [LLM] Cleaned response: '{"newEnhancedPrompt": "A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with blue flames shooting from its mouth, hovering over a dark, stormy landscape under twilight sky with purple and teal hues, intense shadows and lighting, cinematic composition, detailed textures on metallic-blue scales and wings, powerful and menacing presence, high contrast for dramatic effect"}'
+2025-06-30 15:24:28,296 - app_logger - INFO - [LLM] Generated Enhanced Prompt: A fierce dragon with sharp claws and jagged scales, wings spread wide in flight, roaring aggressively with blue flames shooting from its mouth, hovering over a dark, stormy landscape under twilight sky with purple and teal hues, intense shadows and lighting, cinematic composition, detailed textures on metallic-blue scales and wings, powerful and menacing presence, high contrast for dramatic effect
+2025-06-30 15:25:08,738 - app_logger - INFO - Saved prompt ID 3 to SQLite.
+2025-06-30 15:25:08,810 - app_logger - INFO - ChromaDB client initialized. Collection 'creations' is ready.
+2025-06-30 15:25:09,670 - app_logger - INFO - Saved prompt ID 3 embedding to ChromaDB.

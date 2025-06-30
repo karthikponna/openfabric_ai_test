@@ -1,0 +1,2 @@
+2025-06-30 15:28:54,406 - app_logger - INFO - SQLite database initialized successfully.
+2025-06-30 15:28:54,407 - app_logger - INFO - Saving new config for user with id:'super-user'
