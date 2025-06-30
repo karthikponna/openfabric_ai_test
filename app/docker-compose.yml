@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Service 1: The Openfabric event server
+  openfabric-server:
+    # Build this service's image using the Dockerfile in the current directory.
+    build: .
+    # The command to run when this service starts.
+    command: poetry run python ./ignite.py
+    # Map port 8888 on your host machine to port 8888 in the container.
+    ports:
+      - "8888:8888"
+    # Mount the current directory on the host to /app in the container.
+    volumes:
+      - .:/app
+
+  # Service 2: The Streamlit web application
+  streamlit-app:
+    # Build this service's image using the same Dockerfile.
+    build: .
+    # The command to run the Streamlit app.
+    command: poetry run streamlit run ./streamlit_app.py --server.port 8501 --server.headless true
+    # Map port 8501 on your host to port 8501 in the container.
+    ports:
+      - "8501:8501"
+    # Mount the code for live-reloading, same as the other service.
+    volumes:
+      - .:/app
+    depends_on:
+      - openfabric-server
+

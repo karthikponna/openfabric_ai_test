@@ -1,8 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
-start_sh_server
-start_code_server
+echo "🔌 Starting Openfabric event server on port 8888…"
+# Run ignite.py in the background
+poetry run python ./ignite.py &  
+IGNITE_PID=$!
 
-python3 ./ignite.py
+# Give the server a moment to come up
+sleep 2
 
-infinite_loop
+echo "🚀 Launching Streamlit app on port 8501…"
+exec poetry run streamlit run ./streamlit_app.py --server.port 8501 --server.headless true
